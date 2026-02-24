@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="ta">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NIKA | Wolf International</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&family=Kalam:wght@700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg: #080808; --card-bg: #121212; --gold: #d4af37; --price-tag: #ffcc00;
+            --nika-rainbow: linear-gradient(90deg, #ff0000, #ff7300, #fffb00, #48ff00, #00ffd5, #002bff, #7a00ff, #ff00c8, #ff0000);
+            --silver-shine: linear-gradient(90deg, #999 0%, #fff 50%, #999 100%);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+        body { font-family: 'Poppins', sans-serif; background: var(--bg); color: #fff; padding-bottom: 120px; }
+
+        header { padding: 25px 15px; background: #000; border: 1px solid #333; margin: 15px; border-radius: 20px; text-align: center; }
+        
+        /* Wolf International Style */
+        .wolf-brand { font-size: 12px; color: #fff; font-weight: 800; letter-spacing: 4px; text-transform: uppercase; margin-bottom: 2px; }
+        .silver-line { 
+            height: 2px; width: 60%; margin: 5px auto 15px;
+            background: var(--silver-shine);
+            background-size: 200% auto;
+            animation: shine 3s linear infinite;
+        }
+        @keyframes shine { to { background-position: 200% center; } }
+
+        .logo-box { width: 95px; height: 95px; border: 2px solid var(--gold); border-radius: 50%; margin: 0 auto 12px; overflow: hidden; background: #000; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 15px rgba(212,175,55,0.4); }
+        .logo-box img { width: 100%; height: 100%; object-fit: contain; }
+        
+        .nika { font-size: 28px; font-weight: 800; background: var(--nika-rainbow); background-size: 400%; -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: rainbow 8s linear infinite; }
+        @keyframes rainbow { 0% { background-position: 0% } 100% { background-position: 400% } }
+
+        .lang-switch { display: flex; justify-content: center; gap: 8px; margin-top: 20px; }
+        .lang-switch button { background: #1a1a1a; border: 1px solid #333; color: #fff; padding: 8px 16px; border-radius: 20px; font-size: 11px; cursor: pointer; }
+        .lang-switch button.active { background: var(--gold); color: #000; font-weight: 800; border-color: var(--gold); }
+
+        /* Grid */
+        .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; padding: 15px; }
+        .card { background: var(--card-bg); border: 1px solid #222; border-radius: 20px; padding: 15px; text-align: center; position: relative; }
+        .prod-img-container { width: 85px; height: 85px; margin: 0 auto 10px; border-radius: 50%; border: 2px solid #333; overflow: hidden; background: #1a1a1a; }
+        .prod-img-container img { width: 100%; height: 100%; object-fit: cover; }
+
+        /* Info Sections */
+        .info-section { background: #111; margin: 15px; padding: 25px; border-radius: 20px; border: 1px solid #222; }
+        .info-section h2 { color: var(--gold); font-size: 18px; margin-bottom: 12px; border-bottom: 1px solid #333; padding-bottom: 8px; }
+        .info-details { font-size: 13px; color: #bbb; line-height: 1.8; }
+        .shop-card { background: #080808; padding: 15px; border-radius: 15px; margin-bottom: 10px; border-left: 5px solid var(--gold); }
+        
+        /* Admin */
+        #admin-panel { display: none; background: #1a1a1a; padding: 20px; border: 2px solid #ff3333; border-radius: 20px; position: fixed; top: 10%; left: 5%; right: 5%; z-index: 2000; max-height: 80vh; overflow-y: auto; }
+        .admin-input { width: 100%; padding: 12px; margin-bottom: 10px; background: #000; color: #fff; border: 1px solid #444; border-radius: 8px; }
+
+        .cart-bar { position: fixed; bottom: 0; width: 100%; background: rgba(22,22,22,0.95); backdrop-filter: blur(10px); padding: 15px 25px; display: flex; justify-content: space-between; align-items: center; border-top: 2px solid var(--gold); z-index: 1000; }
+        .order-btn { background: #25D366; color: white; padding: 12px 30px; border-radius: 30px; border: none; font-weight: 800; }
+    </style>
+</head>
+<body>
+
+<div id="admin-panel">
+    <h3 style="color:#ff3333; margin-bottom:15px; text-align:center;">🛡️ NIKA ADMIN SYSTEM</h3>
+    <div id="admin-price-list"></div>
+    <h4 style="color:var(--gold); margin:20px 0 10px;">Add New Distributor</h4>
+    <input type="text" id="s-name" class="admin-input" placeholder="Shop Name">
+    <input type="text" id="s-owner" class="admin-input" placeholder="Owner Name">
+    <input type="text" id="s-loc" class="admin-input" placeholder="Location">
+    <input type="text" id="s-phone" class="admin-input" placeholder="Phone Number">
+    <button onclick="addNewShop()" style="background:var(--gold); color:black; border:none; padding:12px; width:100%; border-radius:8px; font-weight:bold;">SAVE SHOP</button>
+    <button onclick="document.getElementById('admin-panel').style.display='none'" style="background:#444; color:white; border:none; padding:12px; width:100%; margin-top:10px; border-radius:8px;">EXIT</button>
+</div>
+
+<header>
+    <div class="wolf-brand">Wolf International</div>
+    <div class="silver-line"></div>
+    <div class="logo-box">
+        <img src="images/logo.png" alt="NIKA Logo" onerror="this.src='https://via.placeholder.com/100/000/d4af37?text=NIKA'">
+    </div>
+    <div class="nika">NIKA PRODUCTS</div>
+    <div id="tagline" style="font-size: 11px; color: var(--gold); margin-top: 5px;">சுவைகளின் சங்கமம்</div>
+    
+    <div class="lang-switch">
+        <button id="btn-ta" onclick="changeLang('ta')" class="active">தமிழ்</button>
+        <button id="btn-en" onclick="changeLang('en')">English</button>
+        <button id="btn-si" onclick="changeLang('si')">සිංහල</button>
+    </div>
+</header>
+
+<div id="product-grid" class="grid"></div>
+
+<div class="info-section">
+    <h2 id="about-title">எங்களைப் பற்றி</h2>
+    <div class="info-details">
+        <p id="about-text">NIKA Products ஆகிய நாம், Wolf International நிறுவனத்தின் கீழ் பாரம்பரிய சுவை மற்றும் தரமான தின்பண்டங்களை தூய்மையான முறையில் தயாரித்து வழங்குகிறோம்.</p>
+        <p style="margin-top:15px;"><b>Registration Number:</b> <span>WLP/VA/V/B/5725</span></p>
+        <p><b>Address:</b> <span>D-39, Pillayaarkovil Road, Thedkilupaykkulam, Vavuniya.</span></p>
+        <p><b>Hotline:</b> +94 77 086 7174</p>
+    </div>
+</div>
+
+<div class="info-section">
+    <h2 id="shop-title">அங்கீகாரம் பெற்ற விற்பனையாளர்கள்</h2>
+    <div id="shops-list"></div>
+</div>
+
+<footer style="text-align:center; padding:30px; opacity:0.1; font-size:10px;" onclick="openAdmin()">WOLF INTERNATIONAL - ADMIN</footer>
+
+<div class="cart-bar">
+    <div id="total-price" style="font-size:22px; font-weight:800; color:var(--gold);">Rs. 0</div>
+    <button class="order-btn" onclick="sendOrder()">ORDER NOW</button>
+</div>
+
+<script>
+    const products = [
+        {ta:"மிக்சர்", en:"Mixture", si:"මික්සර්", price:1200, id:"p1", img:"mix.jpg"},
+        {ta:"மரவள்ளி சிப்ஸ்", en:"Cassava Chips", si:"මණියොක් චිප්ස්", price:800, id:"p2", img:"chips.jpg"},
+        {ta:"முறுக்கு", en:"Murukku", si:"මුරුක්කු", price:900, id:"p3", img:"murukku.jpg"},
+        {ta:"பகோடா", en:"Pakoda", si:"පකෝඩා", price:1000, id:"p4", img:"pakoda.jpg"},
+        {ta:"கச்சான் பகோடா", en:"Peanut Pakoda", si:"රට කජු පකෝඩා", price:1100, id:"p5", img:"kachpak.jpg"},
+        {ta:"கச்சான் அல்வா", en:"Peanut Halwa", si:"රට කජු හල්වා", price:1300, id:"p6", img:"halwa1.jpg"},
+        {ta:"எள்ளு அல்வா", en:"Sesame Halwa", si:"තල හල්වා", price:1300, id:"p7", img:"halwa2.jpg"},
+        {ta:"உறைப்புக் கச்சான்", en:"Spicy Peanut", si:"සැර රට කජු", price:950, id:"p8", img:"uraippu.jpg"},
+        {ta:"பாப்கோன்", en:"Popcorn", si:"පොප්කෝන්", price:500, id:"p9", img:"pop.jpg"},
+        {ta:"கொண்டைக்கடலை", en:"Chickpeas", si:"කඩල", price:900, id:"p10", img:"kondai.jpg"},
+        {ta:"கருப்புக் கடலை", en:"Black Gram", si:"කළු කඩල", price:900, id:"p11", img:"karuppu.jpg"},
+        {ta:"பச்சை பயறு", en:"Green Gram", si:"මුං ඇට", price:900, id:"p12", img:"pachai.jpg"},
+        {ta:"மஞ்சள் பயறு", en:"Yellow Gram", si:"කහ මුං ඇට", price:900, id:"p13", img:"manjal.jpg"},
+        {ta:"பருப்பு", en:"Lentils", si:"පරිප්පු", price:900, id:"p14", img:"paruppu.jpg"},
+        {ta:"கோழி சம்பல்", en:"Chicken Sambal", si:"කුකුල් සම්බල්", price:1500, id:"p15", img:"chicken.jpg"},
+        {ta:"மாட்டு சம்பல்", en:"Beef Sambal", si:"හරක් මස් සම්බල්", price:1700, id:"p16", img:"beef.jpg"},
+        {ta:"மாசி சம்பல்", en:"Maasi Sambal", si:"මාසි සම්බල්", price:1400, id:"p17", img:"maasi.jpg"},
+        {ta:"நெத்தலி பொரியல்", en:"Anchovy Fry", si:"හාල්මැස්සෝ බැදුම", price:1400, id:"p18", img:"nethali.jpg"},
+        {ta:"மாசி பொரியல்", en:"Maasi Fry", si:"මාසි බැදුම", price:1400, id:"p19", img:"maasip.jpg"},
+        {ta:"உள்ளி முறுக்கு", en:"Garlic Murukku", si:"සුදු ලූනු මුරුක්කු", price:950, id:"p20", img:"onion.jpg"},
+        {ta:"பேபி மிக்சர்", en:"Baby Mixture", si:"බේබි මික්සර්", price:1200, id:"p21", img:"baby.jpg"}
+    ];
+
+    let currentLang = 'ta';
+    let cart = [];
+    let shops = JSON.parse(localStorage.getItem('nika_shops_v3')) || [];
+
+    function changeLang(l) {
+        currentLang = l;
+        document.querySelectorAll('.lang-switch button').forEach(b => b.classList.remove('active'));
+        document.getElementById('btn-'+l).classList.add('active');
+        renderAll();
+    }
+
+    function renderAll() {
+        let ph = '';
+        products.forEach((p, i) => {
+            ph += `<div class="card">
+                <div class="prod-img-container"><img src="images/${p.img}" onerror="this.src='https://via.placeholder.com/85/222/d4af37?text=${p.en[0]}'"></div>
+                <h3 style="font-size:10px;margin-bottom:5px;">${p[currentLang]}</h3>
+                <div style="color:var(--price-tag);font-weight:800;font-size:15px;">Rs.${p.price}</div>
+                <button onclick="addToCart(${i})" style="width:100%;margin-top:10px;background:none;border:1px solid var(--gold);color:var(--gold);border-radius:15px;padding:8px;font-size:10px;font-weight:bold;cursor:pointer;">+ ADD</button>
+            </div>`;
+        });
+        document.getElementById('product-grid').innerHTML = ph;
+
+        let sh = '';
+        shops.forEach(s => {
+            sh += `<div class="shop-card"><h4>🏪 ${s.name}</h4><p>👤 <b>Owner:</b> ${s.owner}</p><p>📍 <b>Loc:</b> ${s.loc}</p><p>📞 <b>Ph:</b> ${s.phone}</p></div>`;
+        });
+        document.getElementById('shops-list').innerHTML = sh || '<p style="text-align:center;font-size:11px;color:#666;">Coming Soon...</p>';
+    }
+
+    function addToCart(i) {
+        cart.push(products[i]);
+        document.getElementById('total-price').innerText = "Rs. " + cart.reduce((s, x) => s + x.price, 0);
+    }
+
+    function openAdmin() {
+        if(prompt("Admin Key:") === "nika123") {
+            document.getElementById('admin-panel').style.display = 'block';
+            let h = '';
+            products.forEach((p, i) => {
+                h += `<div style="display:flex;justify-content:space-between;margin-bottom:8px;background:#222;padding:8px;border-radius:5px;">
+                    <span style="font-size:10px;">${p.ta}</span>
+                    <input type="number" value="${p.price}" onchange="products[${i}].price=parseInt(this.value);renderAll();" style="width:70px;background:#000;color:#fff;border:1px solid var(--gold);text-align:center;">
+                </div>`;
+            });
+            document.getElementById('admin-price-list').innerHTML = h;
+        }
+    }
+
+    function addNewShop() {
+        const n = document.getElementById('s-name').value;
+        const o = document.getElementById('s-owner').value;
+        const l = document.getElementById('s-loc').value;
+        const p = document.getElementById('s-phone').value;
+        if(n && o && l && p) {
+            shops.push({name:n, owner:o, loc:l, phone:p});
+            localStorage.setItem('nika_shops_v3', JSON.stringify(shops));
+            renderAll();
+            alert("Shop Saved!");
+            document.getElementById('s-name').value = '';
+        }
+    }
+
+    function sendOrder() {
+        if(cart.length === 0) return;
+        let m = "*NEW ORDER - NIKA*\n";
+        cart.forEach(x => m += `• ${x[currentLang]} - Rs.${x.price}\n`);
+        m += `*Total: ${document.getElementById('total-price').innerText}*`;
+        window.open(`https://wa.me/94770867174?text=${encodeURIComponent(m)}`);
+    }
+
+    window.onload = renderAll;
+</script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
